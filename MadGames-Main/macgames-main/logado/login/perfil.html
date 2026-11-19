@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAD GAMES - Meu Perfil</title>
+    <link rel="stylesheet" href="../global.css">
+
+    <style>
+        /* ================= RESET E ESTRUTURA ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", Arial, sans-serif;
+        }
+
+        body {
+            background-color: #050d1a;
+            color: #fff;
+            padding-top: 80px;
+            padding-bottom: 60px;
+        }
+
+        /* ================= MENU SUPERIOR FIXO ================= */
+        nav {
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: rgba(10, 20, 40, 0.95);
+            backdrop-filter: blur(8px);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            height: 100%;
+        }
+
+        nav li {
+            flex: 1;
+            height: 60px;
+        }
+
+        .menu {
+            color: antiquewhite;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu:hover,
+        .menu.ativo {
+            background-color: #be9e0b;
+            color: #fff;
+        }
+
+        .foto-perfil {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-left: 10px;
+            object-fit: cover;
+        }
+
+        /* ================= PAINEL DO PERFIL ================= */
+        .perfil-wrapper {
+            max-width: 1050px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px;
+        }
+
+        .sidebar {
+            background: #0b1b33;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 16px;
+            padding: 24px 18px;
+            text-align: center;
+            height: fit-content;
+        }
+
+        .avatar-grande {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #be9e0b;
+            margin-bottom: 12px;
+        }
+
+        .sidebar h3 {
+            color: #ffd166;
+            margin-bottom: 4px;
+        }
+
+        .sidebar p {
+            font-size: 13px;
+            opacity: 0.75;
+            margin-bottom: 20px;
+            word-break: break-all;
+        }
+
+        .btn-aba {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: #13294b;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: left;
+            transition: all 0.25s ease;
+        }
+
+        .btn-aba:hover,
+        .btn-aba.ativa {
+            background: #be9e0b;
+            color: #071426;
+            border-color: #be9e0b;
+        }
+
+        .btn-sair {
+            width: 100%;
+            padding: 11px;
+            margin-top: 10px;
+            border: 1px solid #ef4444;
+            background: rgba(239, 68, 68, 0.15);
+            color: #fecaca;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-sair:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        /* ================= CONTEÚDO DAS ABAS ================= */
+        .conteudo-perfil {
+            background: #0b1b33;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 16px;
+            padding: 28px;
+        }
+
+        .conteudo-perfil h2 {
+            color: #ffd166;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            padding-bottom: 10px;
+        }
+
+        .grid-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .campo {
+            margin-bottom: 14px;
+        }
+
+        .campo label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .campo input {
+            width: 100%;
+            padding: 11px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #13294b;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .btn-salvar {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            background: #be9e0b;
+            color: #071426;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .btn-salvar:hover {
+            background: #e0bb12;
+        }
+
+        /* ================= SEGURANÇA E 2FA ================= */
+        .card-seguranca {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            cursor: pointer;
+            border: none;
+        }
+
+        .status-badge.ativo {
+            background: #10b981;
+            color: #052e16;
+        }
+
+        /* ================= HISTÓRICO DE COMPRAS ================= */
+        .topo-historico {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn-limpar-hist {
+            padding: 8px 14px;
+            border: 1px solid #ef4444;
+            background: rgba(239, 68, 68, 0.18);
+            color: #fecaca;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .btn-limpar-hist:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .pedido-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #10b981;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .pedido-card strong {
+            color: #ffd166;
+        }
+
+        @media (max-width: 780px) {
+            .perfil-wrapper { grid-template-columns: 1fr; }
+            .grid-form { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= BARRA DE NAVEGAÇÃO ================= -->
+    <nav>
+        <ul>
+            <li><a href="../inicio/home.html" class="menu">Home</a></li>
+            <li><a href="../inicio/produtos.html" class="menu">Produtos</a></li>
+            <li><a href="../servico/servicos.html" class="menu">Serviços</a></li>
+            <li>
+                <button id="btn-abrir-carrinho" class="btn-carrinho-nav">
+                    🛒 Carrinho <span id="badge-carrinho" class="badge-carrinho">0</span>
+                </button>
+            </li>
+            <li>
+                <a href="perfil.html" class="menu ativo" id="link-login">
+                    <span id="texto-login">Perfil</span>
+                    <img src="../servico/img/avatar-logado.jpg" alt="Perfil" class="foto-perfil">
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- ================= ÁREA DO CLIENTE ================= -->
+    <main class="perfil-wrapper">
+
+        <!-- Menu lateral do usuário -->
+        <aside class="sidebar">
+            <img id="preview-foto" src="../servico/img/avatar-logado.jpg" alt="Foto do Usuário" class="avatar-grande">
+            <h3 id="sidebar-nome">Jogador</h3>
+            <p id="sidebar-email">email@madgames.com</p>
+
+            <button class="btn-aba ativa" data-aba="dados">👤 Dados e Endereço</button>
+            <button class="btn-aba" data-aba="seguranca">🔒 Segurança e 2FA</button>
+            <button class="btn-aba" data-aba="historico">📦 Histórico de Compras</button>
+
+            <button id="btn-sair-conta" class="btn-sair">Sair da Conta</button>
+        </aside>
+
+        <!-- Conteúdo das abas -->
+        <section class="conteudo-perfil">
+
+            <!-- ABA 1: EDITAR NOME, FOTO, E-MAIL E ENDEREÇO -->
+            <div id="aba-dados" class="secao-aba">
+                <h2>Configurações do Perfil</h2>
+                <form id="form-perfil">
+                    <div class="campo">
+                        <label for="input-foto">Alterar Foto de Perfil:</label>
+                        <input type="file" id="input-foto" accept="image/*">
+                    </div>
+
+                    <div class="grid-form">
+                        <div class="campo">
+                            <label for="perfil-nome">Nome completo / Nickname:</label>
+                            <input type="text" id="perfil-nome" required>
+                        </div>
+                        <div class="campo">
+                            <label for="perfil-telefone">Telefone / WhatsApp:</label>
+                            <input type="text" id="perfil-telefone" placeholder="(11) 99999-9999">
+                        </div>
+                    </div>
+
+                    <!-- MELHORIA: campo para trocar o e-mail da conta -->
+                    <div class="campo">
+                        <label for="perfil-email">E-mail da Conta:</label>
+                        <input type="email" id="perfil-email" required>
+                    </div>
+
+                    <div class="campo">
+                        <label for="perfil-endereco">Endereço (Rua e Número):</label>
+                        <input type="text" id="perfil-endereco" placeholder="Ex: Av. Paulista, 1000">
+                    </div>
+
+                    <div class="grid-form">
+                        <div class="campo">
+                            <label for="perfil-cidade">Cidade:</label>
+                            <input type="text" id="perfil-cidade" placeholder="Ex: São Paulo">
+                        </div>
+                        <div class="campo">
+                            <label for="perfil-cep">CEP:</label>
+                            <input type="text" id="perfil-cep" placeholder="00000-000">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-salvar">Salvar Alterações</button>
+                </form>
+            </div>
+
+            <!-- ABA 2: SEGURANÇA (TELEFONE, GMAIL, MICROSOFT, 2FA E DELETAR CONTA) -->
+            <div id="aba-seguranca" class="secao-aba oculto">
+                <h2>Segurança da Conta</h2>
+
+                <div class="card-seguranca">
+                    <div>
+                        <strong>📱 Telefone de Recuperação</strong>
+                        <p style="font-size:13px; opacity:0.75;">Receba códigos de segurança por SMS.</p>
+                    </div>
+                    <button class="status-badge" data-seg="telefone">Vincular</button>
+                </div>
+
+                <div class="card-seguranca">
+                    <div>
+                        <strong>📧 Conta Google (Gmail)</strong>
+                        <p style="font-size:13px; opacity:0.75;">Faça login rápido e proteja sua conta com o Google.</p>
+                    </div>
+                    <button class="status-badge" data-seg="gmail">Vincular</button>
+                </div>
+
+                <div class="card-seguranca">
+                    <div>
+                        <strong>🪟 Conta Microsoft (Xbox / PC)</strong>
+                        <p style="font-size:13px; opacity:0.75;">Integre seu perfil Xbox Live e conquistas.</p>
+                    </div>
+                    <button class="status-badge" data-seg="microsoft">Vincular</button>
+                </div>
+
+                <div class="card-seguranca">
+                    <div>
+                        <strong>🛡️ Verificação em 2 Etapas (2FA)</strong>
+                        <p style="font-size:13px; opacity:0.75;">Camada extra de proteção ao entrar na MAD GAMES.</p>
+                    </div>
+                    <button class="status-badge" data-seg="doisFatores">Ativar 2FA</button>
+                </div>
+
+                <!-- MELHORIA: opção para deletar a conta permanentemente -->
+                <div class="card-seguranca" style="border: 1px solid rgba(239, 68, 68, 0.5); background: rgba(239, 68, 68, 0.08);">
+                    <div>
+                        <strong style="color: #fca5a5;">⚠️ Excluir Conta Permanentemente</strong>
+                        <p style="font-size:13px; opacity:0.8;">Apaga seu cadastro e remove o acesso desta conta.</p>
+                    </div>
+                    <button type="button" id="btn-deletar-conta" class="btn-limpar-hist">Deletar Conta</button>
+                </div>
+            </div>
+
+            <!-- ABA 3: HISTÓRICO DE COMPRAS + BOTÃO APAGAR -->
+            <div id="aba-historico" class="secao-aba oculto">
+                <div class="topo-historico">
+                    <h2 style="margin:0; border:none; padding:0;">Histórico de Compras</h2>
+                    <button id="btn-apagar-historico" class="btn-limpar-hist">🗑️ Apagar Histórico</button>
+                </div>
+                <div id="lista-pedidos"></div>
+            </div>
+
+        </section>
+    </main>
+
+    <script src="../global.js"></script>
+
+    <!-- ================= LÓGICA DO PERFIL, SEGURANÇA E HISTÓRICO ================= -->
+    <script>
+        // Se não estiver logado, redireciona para a tela de login
+        let usuario = MadGames.getUsuarioLogado();
+        if (!usuario) {
+            window.location.href = "login.html";
+        }
+
+        // Preenche os campos do perfil com os dados salvos
+        function carregarDadosPerfil() {
+            document.getElementById("sidebar-nome").textContent = usuario.nome || "Jogador";
+            document.getElementById("sidebar-email").textContent = usuario.email || "";
+            document.getElementById("perfil-nome").value = usuario.nome || "";
+            document.getElementById("perfil-email").value = usuario.email || "";
+            document.getElementById("perfil-telefone").value = usuario.telefone || "";
+            document.getElementById("perfil-endereco").value = usuario.endereco || "";
+            document.getElementById("perfil-cidade").value = usuario.cidade || "";
+            document.getElementById("perfil-cep").value = usuario.cep || "";
+
+            if (usuario.foto) {
+                document.getElementById("preview-foto").src = usuario.foto;
+                document.querySelector(".foto-perfil").src = usuario.foto;
+            }
+        }
+
+        // Upload de foto de perfil (salva localmente no navegador)
+        document.getElementById("input-foto").addEventListener("change", (e) => {
+            const arquivo = e.target.files[0];
+            if (!arquivo) return;
+            const leitor = new FileReader();
+            leitor.onload = () => {
+                usuario.foto = leitor.result;
+                document.getElementById("preview-foto").src = leitor.result;
+                localStorage.setItem("madgames_usuario_logado", JSON.stringify(usuario));
+                MadGames.mostrarToast("Foto de perfil atualizada!");
+            };
+            leitor.readAsDataURL(arquivo);
+        });
+
+        // MELHORIA: salvar alterações de nome, e-mail e endereço
+        document.getElementById("form-perfil").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const emailAntigo = usuario.email;
+            const novoEmail = document.getElementById("perfil-email").value.trim().toLowerCase();
+            const usuarios = JSON.parse(localStorage.getItem("madgames_usuarios") || "[]");
+
+            if (novoEmail !== emailAntigo && usuarios.some((u) => u.email === novoEmail)) {
+                MadGames.mostrarToast("Esse e-mail já está em uso por outra conta!");
+                return;
+            }
+
+            usuario.nome = document.getElementById("perfil-nome").value.trim();
+            usuario.email = novoEmail;
+            usuario.telefone = document.getElementById("perfil-telefone").value.trim();
+            usuario.endereco = document.getElementById("perfil-endereco").value.trim();
+            usuario.cidade = document.getElementById("perfil-cidade").value.trim();
+            usuario.cep = document.getElementById("perfil-cep").value.trim();
+
+            const idx = usuarios.findIndex((u) => u.email === emailAntigo);
+            if (idx !== -1) {
+                usuarios[idx] = { ...usuarios[idx], ...usuario };
+                localStorage.setItem("madgames_usuarios", JSON.stringify(usuarios));
+            }
+
+            localStorage.setItem("madgames_usuario_logado", JSON.stringify(usuario));
+            carregarDadosPerfil();
+            MadGames.configurarMenuUsuario();
+            MadGames.mostrarToast("Dados e e-mail salvos com sucesso!");
+        });
+
+        // Troca entre as 3 abas laterais
+        document.querySelectorAll(".btn-aba").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".btn-aba").forEach((b) => b.classList.remove("ativa"));
+                document.querySelectorAll(".secao-aba").forEach((s) => s.classList.add("oculto"));
+                btn.classList.add("ativa");
+                document.getElementById(`aba-${btn.dataset.aba}`).classList.remove("oculto");
+            });
+        });
+
+        // Controle dos vínculos de segurança e 2FA
+        let seguranca = JSON.parse(localStorage.getItem("madgames_seguranca") || "{}");
+
+        function atualizarBotoesSeguranca() {
+            document.querySelectorAll(".status-badge").forEach((btn) => {
+                const chave = btn.dataset.seg;
+                const ativo = !!seguranca[chave];
+                btn.classList.toggle("ativo", ativo);
+                btn.textContent = chave === "doisFatores"
+                    ? (ativo ? "✓ 2FA Ativado" : "Ativar 2FA")
+                    : (ativo ? "✓ Vinculado" : "Vincular");
+            });
+        }
+
+        document.querySelectorAll(".status-badge").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const chave = btn.dataset.seg;
+                seguranca[chave] = !seguranca[chave];
+                localStorage.setItem("madgames_seguranca", JSON.stringify(seguranca));
+                atualizarBotoesSeguranca();
+                MadGames.mostrarToast(seguranca[chave] ? "Configuração de segurança ativada!" : "Vínculo removido.");
+            });
+        });
+
+        // MELHORIA: botão para deletar a conta permanentemente
+        document.getElementById("btn-deletar-conta").addEventListener("click", () => {
+            if (!confirm("Tem certeza absoluta? Sua conta será excluída permanentemente.")) return;
+
+            let usuarios = JSON.parse(localStorage.getItem("madgames_usuarios") || "[]");
+            usuarios = usuarios.filter((u) => u.email !== usuario.email);
+            localStorage.setItem("madgames_usuarios", JSON.stringify(usuarios));
+
+            localStorage.removeItem("madgames_usuario_logado");
+            localStorage.removeItem("madgames_cookies_status");
+            alert("Conta excluída com sucesso.");
+            window.location.href = "login.html";
+        });
+
+        // Exibe o histórico de compras simuladas no checkout.html
+        function renderizarHistorico() {
+            const lista = document.getElementById("lista-pedidos");
+            const pedidos = JSON.parse(localStorage.getItem("madgames_pedidos") || "[]");
+
+            if (pedidos.length === 0) {
+                lista.innerHTML = `<p style="opacity:0.7;">Nenhuma compra realizada ainda. Visite a aba <a href="../inicio/produtos.html" style="color:#ffd166;">Produtos</a>!</p>`;
+                return;
+            }
+
+            lista.innerHTML = "";
+            pedidos.forEach((p) => {
+                const div = document.createElement("div");
+                div.className = "pedido-card";
+                div.innerHTML = `
+                    <div><strong>Pedido #${p.id}</strong> • ${p.data}</div>
+                    <div>Itens: ${p.itens.join(", ")}</div>
+                    <div>Pagamento: ${p.metodo} • Desconto: ${p.desconto}</div>
+                    <div>Total Pago: <strong>R$ ${p.total}</strong> • Status: <span style="color:#34d399;">${p.status}</span></div>
+                `;
+                lista.appendChild(div);
+            });
+        }
+
+        // Botão para apagar todo o histórico
+        document.getElementById("btn-apagar-historico").addEventListener("click", () => {
+            if (confirm("Tem certeza que deseja apagar todo o seu histórico de compras?")) {
+                localStorage.removeItem("madgames_pedidos");
+                renderizarHistorico();
+                MadGames.mostrarToast("Histórico de compras apagado.");
+            }
+        });
+
+        // MELHORIA: botão Sair da Conta (reseta os cookies para aparecerem de novo após deslogar)
+        document.getElementById("btn-sair-conta").addEventListener("click", () => {
+            localStorage.removeItem("madgames_usuario_logado");
+            localStorage.removeItem("madgames_cookies_status");
+            window.location.href = "login.html";
+        });
+
+        carregarDadosPerfil();
+        atualizarBotoesSeguranca();
+        renderizarHistorico();
+    </script>
+</body>
+
+</html>

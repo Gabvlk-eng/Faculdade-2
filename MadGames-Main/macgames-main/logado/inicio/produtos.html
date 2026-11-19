@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAD GAMES - Produtos</title>
+    <!-- Conecta o CSS global (carrinho lateral, cookies LGPD e ajustes mobile) -->
+    <link rel="stylesheet" href="../global.css">
+
+    <style>
+        /* ================= RESET E CONFIGURAÇÃO BASE ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", Arial, sans-serif;
+        }
+
+        body {
+            background-color: #050d1a;
+            color: #ffffff;
+            padding-top: 60px; /* Compensa a altura do menu fixo */
+        }
+
+        /* Animação suave de entrada dos elementos */
+        @keyframes surgir {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= MENU SUPERIOR FIXO ================= */
+        nav {
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: rgba(10, 20, 40, 0.95);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            height: 100%;
+        }
+
+        nav li {
+            flex: 1;
+            height: 60px;
+        }
+
+        .menu {
+            color: antiquewhite;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu:hover,
+        .menu.ativo {
+            background-color: #be9e0b;
+            color: #fff;
+        }
+
+        .foto-perfil {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-left: 10px;
+            object-fit: cover;
+        }
+
+        /* ================= CABEÇALHO E BARRA DE FILTROS ================= */
+        .cabecalho-loja {
+            text-align: center;
+            padding: 45px 20px 25px;
+            background: linear-gradient(180deg, #0b1b33 0%, #050d1a 100%);
+            animation: surgir 0.6s ease-out;
+        }
+
+        .cabecalho-loja h1 {
+            font-size: 36px;
+            color: #ffd166;
+            margin-bottom: 8px;
+        }
+
+        .cabecalho-loja p {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 15px;
+        }
+
+        /* Barra com busca, categorias e ordenação */
+        .barra-filtros {
+            max-width: 1200px;
+            margin: 20px auto 10px;
+            padding: 18px 20px;
+            background: rgba(11, 27, 51, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .busca-box {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .busca-box input {
+            width: 100%;
+            padding: 11px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #13294b;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .busca-box input:focus {
+            border-color: #be9e0b;
+        }
+
+        .botoes-categoria {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-cat {
+            padding: 10px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: transparent;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.25s ease;
+        }
+
+        .btn-cat:hover,
+        .btn-cat.ativa {
+            background: #be9e0b;
+            border-color: #be9e0b;
+            color: #071426;
+        }
+
+        .ordenar-box select {
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: #13294b;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* ================= GRADE RESPONSIVA DE PRODUTOS ================= */
+        .grade-produtos {
+            max-width: 1200px;
+            margin: 25px auto 60px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 26px;
+        }
+
+        .card-produto {
+            background: #0b1b33;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+            animation: surgir 0.5s ease-out;
+        }
+
+        .card-produto:hover {
+            transform: translateY(-8px);
+            border-color: #be9e0b;
+            box-shadow: 0 12px 30px rgba(190, 158, 11, 0.28);
+        }
+
+        .card-img-box {
+            position: relative;
+            width: 100%;
+            height: 210px;
+            overflow: hidden;
+            background: #071426;
+        }
+
+        .card-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.45s ease;
+        }
+
+        .card-produto:hover .card-img-box img {
+            transform: scale(1.08);
+        }
+
+        .tag-destaque {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #be9e0b;
+            color: #071426;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 4px 9px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .card-corpo {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            gap: 8px;
+        }
+
+        .card-categoria {
+            font-size: 12px;
+            color: #7fceff;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-corpo h3 {
+            font-size: 17px;
+            color: #fff;
+        }
+
+        .card-preco {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffd166;
+            margin-top: auto;
+            padding-top: 8px;
+        }
+
+        .card-parcela {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        .btn-add-carrinho {
+            margin-top: 10px;
+            width: 100%;
+            padding: 11px;
+            border: none;
+            border-radius: 8px;
+            background: #be9e0b;
+            color: #071426;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .btn-add-carrinho:hover {
+            background: #e0bb12;
+            transform: translateY(-2px);
+        }
+
+        /* ================= RODAPÉ PADRÃO MAD GAMES ================= */
+        footer {
+            background: #071426;
+            color: white;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .coluna-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 350px;
+        }
+
+        .coluna-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 15px;
+            padding: 6px 10px;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .coluna-links a:hover {
+            background-color: #9cb2dc;
+            color: #071426;
+            transform: translateX(6px);
+        }
+
+        .divisoria {
+            width: 2px;
+            height: 200px;
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .coluna-logos {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .rede-logos {
+            display: flex;
+            gap: 14px;
+        }
+
+        .logos1 {
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logos1 img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .logos1:hover {
+            transform: scale(1.2) translateY(-4px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= BARRA DE NAVEGAÇÃO ================= -->
+    <nav>
+        <ul>
+            <li><a href="home.html" class="menu">Home</a></li>
+            <li><a href="produtos.html" class="menu ativo">Produtos</a></li>
+            <li><a href="../servico/servicos.html" class="menu">Serviços</a></li>
+            <li>
+                <!-- Botão do carrinho controlado pelo global.js -->
+                <button id="btn-abrir-carrinho" class="btn-carrinho-nav">
+                    🛒 Carrinho <span id="badge-carrinho" class="badge-carrinho">0</span>
+                </button>
+            </li>
+            <li>
+                <!-- Redireciona automaticamente para perfil.html quando logado -->
+                <a href="../login/login.html" class="menu" id="link-login">
+                    <span id="texto-login">Login</span>
+                    <img src="../servico/img/avatar-logado.jpg" alt="Perfil" class="foto-perfil">
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- ================= TÍTULO DO CATÁLOGO ================= -->
+    <header class="cabecalho-loja">
+        <h1>Catálogo MAD GAMES</h1>
+        <p>Jogos oficiais, pré-vendas e periféricos de alta performance</p>
+    </header>
+
+    <!-- ================= BARRA DE PESQUISA, CATEGORIAS E ORDENAÇÃO ================= -->
+    <section class="barra-filtros">
+        <!-- Pesquisa em tempo real -->
+        <div class="busca-box">
+            <input type="text" id="input-busca" placeholder="Pesquisar jogo ou periférico...">
+        </div>
+
+        <!-- Filtro por categoria -->
+        <div class="botoes-categoria">
+            <button class="btn-cat ativa" data-cat="todos">Todos</button>
+            <button class="btn-cat" data-cat="jogos">Jogos</button>
+            <button class="btn-cat" data-cat="perifericos">Periféricos</button>
+        </div>
+
+        <!-- Ordenação por relevância e preço -->
+        <div class="ordenar-box">
+            <select id="select-ordem">
+                <option value="populares">Mais procurados</option>
+                <option value="menor">Menor valor</option>
+                <option value="maior">Maior valor</option>
+            </select>
+        </div>
+    </section>
+
+    <!-- ================= GRADE ONDE O JS INSERE OS PRODUTOS ================= -->
+    <main id="grade-produtos" class="grade-produtos"></main>
+
+    <!-- ================= RODAPÉ (LINKS LGPD E REDES SOCIAIS) ================= -->
+    <footer>
+        <div class="coluna-links">
+            <a href="#" class="link-rodape">As condições de venda</a>
+            <a href="#" class="link-rodape">Política de privacidade</a>
+            <a href="#" class="link-rodape">Programa de Afiliação</a>
+            <a href="#" class="link-rodape">Contacta-nos</a>
+            <a href="#" class="link-rodape">Use o seu gift card</a>
+        </div>
+
+        <div class="divisoria"></div>
+
+        <div class="coluna-logos">
+            <h3>Nos siga nas redes sociais</h3>
+            <div class="rede-logos">
+                <div class="logos1" data-rede="Discord"><img src="imagens/logodiscord.webp" alt="Discord"></div>
+                <div class="logos1" data-rede="Instagram"><img src="imagens/instagramlogo.avif" alt="Instagram"></div>
+                <div class="logos1" data-rede="YouTube"><img src="imagens/youtube.avif" alt="YouTube"></div>
+                <div class="logos1" data-rede="Facebook"><img src="imagens/logofacebook.png" alt="Facebook"></div>
+                <div class="logos1" data-rede="X"><img src="imagens/logoX.avif" alt="X"></div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script global da loja (carrinho, login, redes sociais e cookies LGPD) -->
+    <script src="../global.js"></script>
+
+    <!-- ================= LÓGICA DO CATÁLOGO DE PRODUTOS ================= -->
+    <script>
+        // Banco de produtos: seus jogos originais + jogos reais + periféricos gamer
+        const catalogoProdutos = [
+            // Seus jogos locais
+            { id: "j1", nome: "NBA 2K24 - Kobe Bryant Edition", categoria: "jogos", preco: 249.90, popularidade: 92, imagem: "imagens/jogo1.webp", tag: "Esportes" },
+            { id: "j2", nome: "Marvel's Spider-Man", categoria: "jogos", preco: 199.90, popularidade: 98, imagem: "imagens/jogo2.webp", tag: "Mais Vendido" },
+            { id: "j3", nome: "Grand Theft Auto VI (Pré-venda)", categoria: "jogos", preco: 349.90, popularidade: 100, imagem: "imagens/jogo3.webp", tag: "Pré-venda" },
+            { id: "j4", nome: "The Blood of Dawnwalker", categoria: "jogos", preco: 279.90, popularidade: 89, imagem: "imagens/jogo4.jpg", tag: "RPG" },
+
+            // Jogos reais adicionais (capas oficiais)
+            { id: "j7", nome: "Elden Ring", categoria: "jogos", preco: 229.90, popularidade: 99, imagem: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1245620/header.jpg", tag: "GOTY" },
+            { id: "j8", nome: "Cyberpunk 2077", categoria: "jogos", preco: 199.90, popularidade: 95, imagem: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1091500/header.jpg", tag: "Ação RPG" },
+            { id: "j9", nome: "Red Dead Redemption 2", categoria: "jogos", preco: 149.90, popularidade: 97, imagem: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1174180/header.jpg", tag: "Oferta" },
+            { id: "j10", nome: "God of War", categoria: "jogos", preco: 179.90, popularidade: 96, imagem: "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/1593500/header.jpg", tag: "Clássico" },
+
+            // Periféricos Gamer
+            { id: "p1", nome: "Headset Gamer 7.1 Surround RGB", categoria: "perifericos", preco: 289.90, popularidade: 94, imagem: "https://images.unsplash.com/photo-1599669454699-248893623440?w=600", tag: "Áudio Pro" },
+            { id: "p2", nome: "Teclado Mecânico Switch Blue RGB", categoria: "perifericos", preco: 329.90, popularidade: 95, imagem: "https://images.unsplash.com/photo-1595225476474-87563907a212?w=600", tag: "Mecânico" },
+            { id: "p3", nome: "Mouse Gamer 16.000 DPI Sem Fio", categoria: "perifericos", preco: 179.90, popularidade: 90, imagem: "https://images.unsplash.com/photo-1527814050087-3793815479db?w=600", tag: "Precisão" },
+            { id: "p4", nome: "Controle DualSense Wireless", categoria: "perifericos", preco: 419.90, popularidade: 97, imagem: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=600", tag: "Original" },
+            { id: "p5", nome: "Monitor Gamer 27\" 165Hz IPS", categoria: "perifericos", preco: 1299.90, popularidade: 93, imagem: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600", tag: "165Hz" },
+            { id: "p6", nome: "Combo Especial MAD GAMES", categoria: "perifericos", preco: 500.00, popularidade: 91, imagem: "imagens/segundacapa.jpeg", tag: "Combo" }
+        ];
+
+        const grade = document.getElementById("grade-produtos");
+        const inputBusca = document.getElementById("input-busca");
+        const selectOrdem = document.getElementById("select-ordem");
+        const botoesCat = document.querySelectorAll(".btn-cat");
+
+        let categoriaAtual = "todos";
+
+        // Filtra, ordena e desenha os cards na tela
+        function renderizarProdutos() {
+            const termo = inputBusca.value.toLowerCase().trim();
+            const ordem = selectOrdem.value;
+
+            let lista = catalogoProdutos.filter((p) => {
+                const bateCategoria = categoriaAtual === "todos" || p.categoria === categoriaAtual;
+                const bateBusca = p.nome.toLowerCase().includes(termo);
+                return bateCategoria && bateBusca;
+            });
+
+            // Aplica a ordenação escolhida pelo usuário
+            if (ordem === "menor") lista.sort((a, b) => a.preco - b.preco);
+            if (ordem === "maior") lista.sort((a, b) => b.preco - a.preco);
+            if (ordem === "populares") lista.sort((a, b) => b.popularidade - a.popularidade);
+
+            if (lista.length === 0) {
+                grade.innerHTML = `<p style="grid-column:1/-1; text-align:center; opacity:0.7;">Nenhum produto encontrado.</p>`;
+                return;
+            }
+
+            grade.innerHTML = "";
+            lista.forEach((prod) => {
+                const parcela = (prod.preco / 6).toFixed(2).replace(".", ",");
+                const card = document.createElement("div");
+                card.className = "card-produto";
+                card.innerHTML = `
+                    <div class="card-img-box">
+                        <span class="tag-destaque">${prod.tag}</span>
+                        <img src="${prod.imagem}" alt="${prod.nome}">
+                    </div>
+                    <div class="card-corpo">
+                        <span class="card-categoria">${prod.categoria === "jogos" ? "Jogo" : "Periférico"}</span>
+                        <h3>${prod.nome}</h3>
+                        <div class="card-preco">R$ ${prod.preco.toFixed(2).replace(".", ",")}</div>
+                        <div class="card-parcela">ou 6x de R$ ${parcela} sem juros</div>
+                        <button class="btn-add-carrinho">Adicionar ao Carrinho</button>
+                    </div>
+                `;
+
+                // Conecta o botão ao carrinho global
+                card.querySelector(".btn-add-carrinho").addEventListener("click", () => {
+                    MadGames.adicionarAoCarrinho(prod);
+                });
+
+                grade.appendChild(card);
+            });
+        }
+
+        // Eventos dos botões de categoria, busca e ordenação
+        botoesCat.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                botoesCat.forEach((b) => b.classList.remove("ativa"));
+                btn.classList.add("ativa");
+                categoriaAtual = btn.dataset.cat;
+                renderizarProdutos();
+            });
+        });
+
+        inputBusca.addEventListener("input", renderizarProdutos);
+        selectOrdem.addEventListener("change", renderizarProdutos);
+
+        renderizarProdutos();
+    </script>
+</body>
+
+</html>

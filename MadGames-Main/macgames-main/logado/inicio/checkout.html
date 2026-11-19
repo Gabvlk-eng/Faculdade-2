@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAD GAMES - Pré-Pagamento e Checkout</title>
+    <link rel="stylesheet" href="../global.css">
+
+    <style>
+        /* ================= RESET E ESTRUTURA BASE ================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", Arial, sans-serif;
+        }
+
+        body {
+            background-color: #050d1a;
+            color: #ffffff;
+            padding-top: 80px;
+            padding-bottom: 60px;
+        }
+
+        @keyframes surgir {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ================= MENU SUPERIOR FIXO ================= */
+        nav {
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: rgba(10, 20, 40, 0.95);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            height: 100%;
+        }
+
+        nav li {
+            flex: 1;
+            height: 60px;
+        }
+
+        .menu {
+            color: antiquewhite;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .menu:hover {
+            background-color: #be9e0b;
+            color: #fff;
+        }
+
+        .foto-perfil {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-left: 10px;
+            object-fit: cover;
+        }
+
+        /* ================= LAYOUT EM 2 COLUNAS ================= */
+        .checkout-container {
+            max-width: 1150px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1.15fr;
+            gap: 28px;
+            animation: surgir 0.6s ease-out;
+        }
+
+        .painel {
+            background: #0b1b33;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 16px;
+            padding: 26px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .painel h2 {
+            color: #ffd166;
+            font-size: 22px;
+            margin-bottom: 18px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            padding-bottom: 10px;
+        }
+
+        /* ================= ITENS DO RESUMO ================= */
+        .lista-resumo {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 320px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .item-resumo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .item-resumo img {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .item-resumo-info {
+            flex: 1;
+            font-size: 14px;
+        }
+
+        .item-resumo-info small {
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        /* ================= CUPONS DE DESCONTO (10%, 30%, 50%) ================= */
+        .box-desconto {
+            background: rgba(190, 158, 11, 0.1);
+            border: 1px dashed #be9e0b;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .box-desconto-topo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            color: #ffd166;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+
+        .botoes-cupom {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-cupom {
+            flex: 1;
+            min-width: 85px;
+            padding: 10px;
+            border: 1px solid #be9e0b;
+            background: #13294b;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.25s ease;
+        }
+
+        .btn-cupom:hover,
+        .btn-cupom.ativo {
+            background: #be9e0b;
+            color: #071426;
+            transform: translateY(-2px);
+        }
+
+        .linha-valor {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 15px;
+        }
+
+        .linha-desconto {
+            color: #34d399;
+            font-weight: bold;
+        }
+
+        .linha-total {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffd166;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 12px;
+            margin-top: 12px;
+        }
+
+        /* ================= FORMAS DE PAGAMENTO ================= */
+        .abas-pagamento {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .aba-pag {
+            flex: 1;
+            min-width: 110px;
+            padding: 12px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #13294b;
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+            transition: all 0.25s ease;
+        }
+
+        .aba-pag:hover,
+        .aba-pag.ativa {
+            border-color: #be9e0b;
+            background: #be9e0b;
+            color: #071426;
+        }
+
+        .campo {
+            margin-bottom: 14px;
+        }
+
+        .campo label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .campo input,
+        .campo select {
+            width: 100%;
+            padding: 11px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background: #13294b;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .campo input:focus,
+        .campo select:focus {
+            border-color: #be9e0b;
+        }
+
+        .duas-colunas {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .box-qrcode {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+        }
+
+        .box-qrcode img {
+            width: 180px;
+            height: 180px;
+            border-radius: 10px;
+            background: #fff;
+            padding: 8px;
+            margin: 12px auto;
+            display: block;
+        }
+
+        .btn-copiar {
+            padding: 9px 16px;
+            border: 1px solid #7fceff;
+            background: transparent;
+            color: #7fceff;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-copiar:hover {
+            background: rgba(127, 206, 255, 0.15);
+        }
+
+        .btn-finalizar {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #be9e0b;
+            color: #071426;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .btn-finalizar:hover {
+            background: #e0bb12;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 850px) {
+            .checkout-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ================= BARRA DE NAVEGAÇÃO ================= -->
+    <nav>
+        <ul>
+            <li><a href="home.html" class="menu">Home</a></li>
+            <li><a href="produtos.html" class="menu">Produtos</a></li>
+            <li><a href="../servico/servicos.html" class="menu">Serviços</a></li>
+            <li>
+                <button id="btn-abrir-carrinho" class="btn-carrinho-nav">
+                    🛒 Carrinho <span id="badge-carrinho" class="badge-carrinho">0</span>
+                </button>
+            </li>
+            <li>
+                <a href="../login/login.html" class="menu" id="link-login">
+                    <span id="texto-login">Login</span>
+                    <img src="../servico/img/avatar-logado.jpg" alt="Perfil" class="foto-perfil">
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- ================= CONTEÚDO PRINCIPAL DO PRÉ-PAGAMENTO ================= -->
+    <main class="checkout-container">
+
+        <!-- COLUNA 1: RESUMO DOS PRODUTOS E DESCONTO -->
+        <section class="painel">
+            <h2>1. Resumo da Compra</h2>
+            <div id="lista-resumo" class="lista-resumo"></div>
+
+            <!-- MELHORIA: campo para digitar o cupom (MAD10, MAD30 ou MAD50) -->
+            <div class="box-desconto">
+                <div class="box-desconto-topo">
+                    <span>🏷️ Cupom de Desconto</span>
+                </div>
+                <div class="botoes-cupom">
+                    <input type="text" id="input-cupom" placeholder="Digite o cupom (ex: MAD10)"
+                           style="flex: 2; min-width: 150px; padding: 10px; border-radius: 8px; border: 1px solid #be9e0b; background: #13294b; color: #fff; text-transform: uppercase; outline: none;">
+                    <button type="button" id="btn-aplicar-cupom" class="btn-cupom">Aplicar</button>
+                    <button type="button" id="btn-remover-cupom" class="btn-cupom" style="border-color: #ef4444;">Remover</button>
+                </div>
+                <small id="msg-cupom" style="display: block; margin-top: 8px; font-size: 12px; color: #ffd166;"></small>
+            </div>
+
+            <!-- Cálculo automático de subtotal, abatimento e total -->
+            <div class="linha-valor">
+                <span>Subtotal:</span>
+                <span id="valor-subtotal">R$ 0,00</span>
+            </div>
+            <div class="linha-valor linha-desconto">
+                <span id="label-desconto">Desconto (0%):</span>
+                <span id="valor-desconto">- R$ 0,00</span>
+            </div>
+            <div class="linha-valor linha-total">
+                <span>Total a Pagar:</span>
+                <span id="valor-final">R$ 0,00</span>
+            </div>
+        </section>
+
+        <!-- COLUNA 2: PAGAMENTO (QR CODE PIX, E-MAIL E CARTÃO COM PARCELAMENTO) -->
+        <section class="painel">
+            <h2>2. Forma de Pagamento</h2>
+
+            <div class="abas-pagamento">
+                <button type="button" class="aba-pag ativa" data-metodo="pix">PIX (QR Code)</button>
+                <button type="button" class="aba-pag" data-metodo="credito">Cartão de Crédito</button>
+                <button type="button" class="aba-pag" data-metodo="debito">Cartão de Débito</button>
+            </div>
+
+            <form id="form-checkout">
+                <!-- E-mail para comprovante -->
+                <div class="campo">
+                    <label for="email-recibo">E-mail para envio do comprovante e códigos:</label>
+                    <input type="email" id="email-recibo" placeholder="seuemail@exemplo.com" required>
+                </div>
+
+                <!-- PIX com QR Code gerado dinamicamente -->
+                <div id="sec-pix" class="box-qrcode">
+                    <p>Escaneie o QR Code abaixo no app do seu banco:</p>
+                    <img id="img-qrcode" src="" alt="QR Code PIX MAD GAMES">
+                    <p style="font-size:13px; margin-bottom:10px; opacity:0.85;">
+                        Chave PIX: <strong>pagamentos@madgames.com.br</strong>
+                    </p>
+                    <button type="button" id="btn-copiar-pix" class="btn-copiar">📋 Copiar Código PIX</button>
+                </div>
+
+                <!-- Dados do Cartão (Crédito ou Débito) -->
+                <div id="sec-cartao" class="oculto">
+                    <div class="campo">
+                        <label for="num-cartao">Número do Cartão:</label>
+                        <input type="text" id="num-cartao" placeholder="0000 0000 0000 0000" maxlength="19">
+                    </div>
+
+                    <div class="campo">
+                        <label for="nome-cartao">Nome impresso no cartão:</label>
+                        <input type="text" id="nome-cartao" placeholder="NOME COMPLETO">
+                    </div>
+
+                    <div class="duas-colunas">
+                        <div class="campo">
+                            <label for="validade-cartao">Validade (MM/AA):</label>
+                            <input type="text" id="validade-cartao" placeholder="12/29" maxlength="5">
+                        </div>
+                        <div class="campo">
+                            <label for="cvv-cartao">CVV:</label>
+                            <input type="text" id="cvv-cartao" placeholder="123" maxlength="4">
+                        </div>
+                    </div>
+
+                    <!-- Parcelamento aparente (aparece no Crédito) -->
+                    <div class="campo" id="box-parcelas">
+                        <label for="select-parcelas">Parcelamento:</label>
+                        <select id="select-parcelas"></select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-finalizar">Confirmar e Finalizar Pedido</button>
+            </form>
+        </section>
+
+    </main>
+
+    <script src="../global.js"></script>
+
+    <!-- ================= LÓGICA DO PRÉ-PAGAMENTO, DESCONTO E HISTÓRICO ================= -->
+    <script>
+        let descontoPercentual = 0;
+        let metodoAtual = "pix";
+        let totalFinal = 0;
+
+        const listaResumo = document.getElementById("lista-resumo");
+        const elSubtotal = document.getElementById("valor-subtotal");
+        const elLabelDesc = document.getElementById("label-desconto");
+        const elValorDesc = document.getElementById("valor-desconto");
+        const elValorFinal = document.getElementById("valor-final");
+        const imgQrCode = document.getElementById("img-qrcode");
+        const selectParcelas = document.getElementById("select-parcelas");
+        const emailRecibo = document.getElementById("email-recibo");
+
+        // Preenche o e-mail se o usuário já estiver logado
+        const userLogado = MadGames.getUsuarioLogado();
+        if (userLogado && userLogado.email) {
+            emailRecibo.value = userLogado.email;
+        }
+
+        // Recalcula subtotal, desconto, QR Code e parcelas (1x a 12x)
+        function atualizarResumo() {
+            const carrinho = MadGames.getCarrinho();
+
+            if (carrinho.length === 0) {
+                listaResumo.innerHTML = `<p style="opacity:0.7;">Seu carrinho está vazio. <a href="produtos.html" style="color:#ffd166;">Ver produtos</a></p>`;
+            } else {
+                listaResumo.innerHTML = "";
+                carrinho.forEach((item) => {
+                    const div = document.createElement("div");
+                    div.className = "item-resumo";
+                    div.innerHTML = `
+                        <img src="${item.imagem}" alt="${item.nome}">
+                        <div class="item-resumo-info">
+                            <strong>${item.nome}</strong><br>
+                            <small>Qtd: ${item.qtd}x • R$ ${item.preco.toFixed(2).replace(".", ",")}</small>
+                        </div>
+                        <strong>R$ ${(item.preco * item.qtd).toFixed(2).replace(".", ",")}</strong>
+                    `;
+                    listaResumo.appendChild(div);
+                });
+            }
+
+            const subtotal = carrinho.reduce((acc, item) => acc + item.preco * item.qtd, 0);
+            const valorDesconto = subtotal * (descontoPercentual / 100);
+            totalFinal = subtotal - valorDesconto;
+
+            elSubtotal.textContent = `R$ ${subtotal.toFixed(2).replace(".", ",")}`;
+            elLabelDesc.textContent = `Desconto (${descontoPercentual}%):`;
+            elValorDesc.textContent = `- R$ ${valorDesconto.toFixed(2).replace(".", ",")}`;
+            elValorFinal.textContent = `R$ ${totalFinal.toFixed(2).replace(".", ",")}`;
+
+            // Gera QR Code com o valor final abatido
+            const textoPix = encodeURIComponent(`MADGAMES-PIX-VALOR-R$${totalFinal.toFixed(2)}`);
+            imgQrCode.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${textoPix}`;
+
+            // Monta o parcelamento aparente
+            selectParcelas.innerHTML = "";
+            for (let i = 1; i <= 12; i++) {
+                const valorParcela = (totalFinal / i).toFixed(2).replace(".", ",");
+                const infoJuros = i <= 6 ? "sem juros" : "no cartão";
+                const opt = document.createElement("option");
+                opt.value = `${i}x de R$ ${valorParcela}`;
+                opt.textContent = `${i}x de R$ ${valorParcela} (${infoJuros})`;
+                selectParcelas.appendChild(opt);
+            }
+        }
+
+        // MELHORIA: validação dos 3 cupons digitáveis (10%, 30% e 50%)
+        const cuponsValidos = {
+            "MAD10": 10,
+            "MAD30": 30,
+            "MAD50": 50
+        };
+
+        const inputCupom = document.getElementById("input-cupom");
+        const msgCupom = document.getElementById("msg-cupom");
+
+        document.getElementById("btn-aplicar-cupom").addEventListener("click", () => {
+            const codigo = inputCupom.value.trim().toUpperCase();
+            if (cuponsValidos[codigo]) {
+                descontoPercentual = cuponsValidos[codigo];
+                msgCupom.textContent = `✓ Cupom ${codigo} aplicado (${descontoPercentual}% de desconto)!`;
+                msgCupom.style.color = "#34d399";
+                MadGames.mostrarToast(`Desconto de ${descontoPercentual}% aplicado!`);
+                atualizarResumo();
+            } else {
+                msgCupom.textContent = "✕ Cupom inválido. Tente MAD10, MAD30 ou MAD50.";
+                msgCupom.style.color = "#f87171";
+                MadGames.mostrarToast("Cupom inválido!");
+            }
+        });
+
+        document.getElementById("btn-remover-cupom").addEventListener("click", () => {
+            descontoPercentual = 0;
+            inputCupom.value = "";
+            msgCupom.textContent = "";
+            MadGames.mostrarToast("Desconto removido.");
+            atualizarResumo();
+        });
+
+        // Alternância entre PIX, Crédito e Débito
+        document.querySelectorAll(".aba-pag").forEach((aba) => {
+            aba.addEventListener("click", () => {
+                document.querySelectorAll(".aba-pag").forEach((a) => a.classList.remove("ativa"));
+                aba.classList.add("ativa");
+                metodoAtual = aba.dataset.metodo;
+
+                document.getElementById("sec-pix").classList.toggle("oculto", metodoAtual !== "pix");
+                document.getElementById("sec-cartao").classList.toggle("oculto", metodoAtual === "pix");
+                document.getElementById("box-parcelas").classList.toggle("oculto", metodoAtual !== "credito");
+            });
+        });
+
+        // Máscaras de formatação do cartão
+        document.getElementById("num-cartao").addEventListener("input", (e) => {
+            let v = e.target.value.replace(/\D/g, "").slice(0, 16);
+            e.target.value = v.replace(/(\d{4})(?=\d)/g, "$1 ");
+        });
+
+        document.getElementById("validade-cartao").addEventListener("input", (e) => {
+            let v = e.target.value.replace(/\D/g, "").slice(0, 4);
+            e.target.value = v.replace(/(\d{2})(?=\d)/, "$1/");
+        });
+
+        // Copiar código PIX
+        document.getElementById("btn-copiar-pix").addEventListener("click", () => {
+            navigator.clipboard?.writeText(`00020126360014BR.GOV.BCB.PIX0114pagamentos@madgames.com.br5204000053039865406${totalFinal.toFixed(2)}`);
+            MadGames.mostrarToast("Código PIX Copia e Cola copiado!");
+        });
+
+        // Simula pagamento, salva no histórico do perfil e limpa o carrinho
+        document.getElementById("form-checkout").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const carrinho = MadGames.getCarrinho();
+
+            if (carrinho.length === 0) {
+                MadGames.mostrarToast("Adicione itens ao carrinho antes de pagar!");
+                return;
+            }
+
+            if (metodoAtual !== "pix") {
+                const num = document.getElementById("num-cartao").value.replace(/\s/g, "");
+                if (num.length < 16) {
+                    MadGames.mostrarToast("Digite os 16 números do cartão.");
+                    return;
+                }
+            }
+
+            const novoPedido = {
+                id: "MAD-" + Math.floor(100000 + Math.random() * 900000),
+                data: new Date().toLocaleString("pt-BR"),
+                itens: carrinho.map((i) => `${i.qtd}x ${i.nome}`),
+                desconto: `${descontoPercentual}%`,
+                metodo: metodoAtual === "pix" ? "PIX (QR Code)" : metodoAtual === "credito" ? `Crédito (${selectParcelas.value})` : "Cartão de Débito",
+                total: totalFinal.toFixed(2).replace(".", ","),
+                email: emailRecibo.value.trim(),
+                status: "Pagamento Aprovado"
+            };
+
+            const historico = JSON.parse(localStorage.getItem("madgames_pedidos") || "[]");
+            historico.unshift(novoPedido);
+            localStorage.setItem("madgames_pedidos", JSON.stringify(historico));
+
+            MadGames.salvarCarrinho([]);
+            MadGames.mostrarToast(`Pedido ${novoPedido.id} aprovado! Abrindo seu Perfil...`);
+
+            setTimeout(() => {
+                window.location.href = "../login/perfil.html";
+            }, 1700);
+        });
+
+        atualizarResumo();
+    </script>
+</body>
+
+</html>

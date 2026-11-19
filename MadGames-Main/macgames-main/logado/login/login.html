@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <!-- CORREÇÃO: conecta o estilo global (cookies LGPD e responsividade) -->
+    <link rel="stylesheet" href="../global.css">
+    <title>MAD GAMES - Login</title>
+</head>
+
+<body>
+    <!-- Barra de navegação fixa (CORRIGIDA com Produtos) -->
+    <nav>
+        <ul>
+            <li><a href="../inicio/home.html" class="menu">Home</a></li>
+            <li><a href="../inicio/produtos.html" class="menu">Produtos</a></li>
+            <li><a href="../servico/servicos.html" class="menu">Serviços</a></li>
+        </ul>
+    </nav>
+
+    <!-- Card principal com efeito de vidro -->
+    <div class="container">
+        <form id="form-login">
+            <h1 id="titulo-login">Entrar na Plataforma</h1>
+
+            <!-- Mensagem de erro ou sucesso -->
+            <div id="aviso-login" class="aviso oculto"></div>
+
+            <!-- Campo de Nome (aparece apenas no modo Cadastro) -->
+            <div class="input-container oculto" id="box-nome">
+                <input id="nome" placeholder="Seu nome gamer" type="text">
+                <img width="20" height="20" src="imagens/icons8-usuario-50.png" alt="Nome">
+            </div>
+
+            <!-- Campo de E-mail -->
+            <div class="input-container">
+                <input id="email" placeholder="E-mail" type="email" required>
+                <img width="20" height="20" src="imagens/icons8-usuario-50.png" alt="Email">
+            </div>
+
+            <!-- Campo de Senha (corrigido para type="password") -->
+            <div class="input-container">
+                <input id="senha" placeholder="Senha" type="password" required minlength="4">
+                <img width="20" height="20" src="imagens/icons8-trancar-50.png" alt="Senha">
+                <a href="#" id="esqueceu-senha">Esqueceu a senha?</a>
+            </div>
+
+            <!-- Botão de envio -->
+            <button type="submit" class="submit-button" id="btn-entrar">Entrar</button>
+
+            <!-- Alternar entre Login e Cadastro -->
+            <div class="resgister-link">
+                <p id="texto-troca">Não está cadastrado? <a href="#" id="btn-trocar">Cadastrar</a></p>
+            </div>
+        </form>
+    </div>
+
+    <!-- CORREÇÃO: conecta o script global -->
+    <script src="../global.js"></script>
+
+    <!-- ================= FUNCIONALIDADE DE LOGIN E CADASTRO ================= -->
+    <script>
+        const formLogin = document.getElementById("form-login");
+        const tituloLogin = document.getElementById("titulo-login");
+        const boxNome = document.getElementById("box-nome");
+        const inputNome = document.getElementById("nome");
+        const inputEmail = document.getElementById("email");
+        const inputSenha = document.getElementById("senha");
+        const btnEntrar = document.getElementById("btn-entrar");
+        const textoTroca = document.getElementById("texto-troca");
+        const linkEsqueceu = document.getElementById("esqueceu-senha");
+        const aviso = document.getElementById("aviso-login");
+
+        let modoCadastro = false;
+        let tentativasFalhas = 0;
+        let bloqueadoAte = 0;
+
+        function mostrarAviso(msg, tipo) {
+            aviso.textContent = msg;
+            aviso.className = `aviso ${tipo}`;
+        }
+
+        function pegarUsuarios() {
+            const salvos = localStorage.getItem("madgames_usuarios");
+            if (salvos) return JSON.parse(salvos);
+
+            // Conta padrão pronta para teste na apresentação
+            const padrao = [{ nome: "Player VIP", email: "admin@madgames.com", senha: "1234" }];
+            localStorage.setItem("madgames_usuarios", JSON.stringify(padrao));
+            return padrao;
+        }
+
+        function ativarBotaoTroca() {
+            document.getElementById("btn-trocar").addEventListener("click", (e) => {
+                e.preventDefault();
+                modoCadastro = !modoCadastro;
+                aviso.className = "aviso oculto";
+
+                if (modoCadastro) {
+                    tituloLogin.textContent = "Criar Conta";
+                    boxNome.classList.remove("oculto");
+                    inputNome.required = true;
+                    linkEsqueceu.classList.add("oculto");
+                    btnEntrar.textContent = "Cadastrar";
+                    textoTroca.innerHTML = 'Já tem conta? <a href="#" id="btn-trocar">Entrar</a>';
+                } else {
+                    tituloLogin.textContent = "Entrar na Plataforma";
+                    boxNome.classList.add("oculto");
+                    inputNome.required = false;
+                    linkEsqueceu.classList.remove("oculto");
+                    btnEntrar.textContent = "Entrar";
+                    textoTroca.innerHTML = 'Não está cadastrado? <a href="#" id="btn-trocar">Cadastrar</a>';
+                }
+                ativarBotaoTroca();
+            });
+        }
+        ativarBotaoTroca();
+
+        linkEsqueceu.addEventListener("click", (e) => {
+            e.preventDefault();
+            const email = inputEmail.value.trim();
+            if (!email) {
+                mostrarAviso("Digite seu e-mail acima para recuperar a senha.", "erro");
+                inputEmail.focus();
+                return;
+            }
+            mostrarAviso(`Link de recuperação enviado para ${email}!`, "sucesso");
+        });
+
+        formLogin.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            // MELHORIA: proteção contra força bruta (bloqueia por 15s após 3 erros)
+            if (Date.now() < bloqueadoAte) {
+                const seg = Math.ceil((bloqueadoAte - Date.now()) / 1000);
+                mostrarAviso(`Muitas tentativas! Aguarde ${seg}s para tentar novamente.`, "erro");
+                return;
+            }
+
+            const nome = inputNome.value.trim();
+            const email = inputEmail.value.trim().toLowerCase();
+            const senha = inputSenha.value.trim();
+            const usuarios = pegarUsuarios();
+
+            if (modoCadastro) {
+                // MELHORIA: exige senha forte (mínimo 6 caracteres, com letras e números)
+                const senhaForte = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/.test(senha);
+                if (!senhaForte) {
+                    mostrarAviso("A senha deve ter no mínimo 6 caracteres, com letras e números.", "erro");
+                    return;
+                }
+                if (usuarios.some((u) => u.email === email)) {
+                    mostrarAviso("Esse e-mail já está cadastrado!", "erro");
+                    return;
+                }
+                const novo = { nome, email, senha };
+                usuarios.push(novo);
+                localStorage.setItem("madgames_usuarios", JSON.stringify(usuarios));
+                localStorage.setItem("madgames_usuario_logado", JSON.stringify(novo));
+                mostrarAviso(`Conta criada com segurança! Bem-vindo(a), ${nome}!`, "sucesso");
+                /* CORREÇÃO: redireciona direto para o perfil */
+                setTimeout(() => (window.location.href = "perfil.html"), 1100);
+            } else {
+                const achou = usuarios.find((u) => u.email === email && u.senha === senha);
+                if (!achou) {
+                    tentativasFalhas++;
+                    if (tentativasFalhas >= 3) {
+                        bloqueadoAte = Date.now() + 15000;
+                        tentativasFalhas = 0;
+                        mostrarAviso("3 tentativas incorretas! Acesso bloqueado por 15 segundos.", "erro");
+                    } else {
+                        mostrarAviso(`Dados incorretos (${tentativasFalhas}/3). Teste: admin@madgames.com / 1234`, "erro");
+                    }
+                    return;
+                }
+
+                // MELHORIA: pede código 2FA caso o usuário tenha ativado no perfil
+                const seguranca = JSON.parse(localStorage.getItem("madgames_seguranca") || "{}");
+                if (seguranca.doisFatores) {
+                    const codigoGerado = String(Math.floor(100000 + Math.random() * 900000));
+                    const digitado = prompt(`Verificação em 2 Etapas (2FA)\nSeu código de segurança é: ${codigoGerado}\n\nDigite o código para entrar:`);
+                    if (digitado !== codigoGerado) {
+                        mostrarAviso("Código 2FA inválido! Login cancelado.", "erro");
+                        return;
+                    }
+                }
+
+                tentativasFalhas = 0;
+                localStorage.setItem("madgames_usuario_logado", JSON.stringify(achou));
+                mostrarAviso(`Login aprovado! Bem-vindo(a), ${achou.nome}!`, "sucesso");
+                /* CORREÇÃO: redireciona direto para o perfil */
+                setTimeout(() => (window.location.href = "perfil.html"), 1000);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAD GAMES</title>
+    <link rel="stylesheet" href="estilo.css">
+    <!-- CORREÇÃO: conecta o estilo global (carrinho, cookies LGPD e mobile) -->
+    <link rel="stylesheet" href="../global.css">
+</head>
+
+<body>
+
+    <!-- Barra de navegação fixa (CORRIGIDA com Produtos e Carrinho) -->
+    <nav>
+        <ul>
+            <li><a href="home.html" class="menu">Home</a></li>
+            <li><a href="produtos.html" class="menu">Produtos</a></li>
+            <li><a href="../servico/servicos.html" class="menu">Serviços</a></li>
+            <li>
+                <button id="btn-abrir-carrinho" class="btn-carrinho-nav">
+                    🛒 Carrinho <span id="badge-carrinho" class="badge-carrinho">0</span>
+                </button>
+            </li>
+            <li>
+                <a href="../login/login.html" class="menu" id="link-login">
+                    <span id="texto-login">Login</span>
+                    <img src="../servico/img/avatar-logado.jpg" alt="Perfil" class="foto-perfil">
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Capa principal -->
+    <img src="imagens/capa.jpeg" class="capa animar-entrada" alt="Capa MAD GAMES">
+
+    <!-- Seção Sobre -->
+    <div class="logoetexto animar-entrada">
+        <img src="imagens/logo1.png" class="logo1" alt="Logo MAD GAMES">
+
+        <div class="sobre">
+            <h1 class="titulo" id="sobre1">Sobre a MAD GAMES</h1>
+            <p class="texto">
+                A MAD GAMES é uma loja especializada no universo dos jogos,
+                oferecendo tudo o que os apaixonados por games precisam para
+                elevar sua experiência. Aqui você encontra consoles, controles,
+                acessórios, periféricos, jogos e diversos produtos relacionados
+                ao mundo gamer.
+
+                Nosso objetivo é proporcionar qualidade, variedade e praticidade,
+                atendendo desde jogadores casuais até os verdadeiros apaixonados
+                por tecnologia e competição.
+
+                Na MAD GAMES, sua diversão é levada a sério! Entre nesse universo
+                e descubra tudo o que o mundo dos games tem a oferecer!
+
+                MAD GAMES – Sua paixão por jogos começa aqui!
+            </p>
+        </div>
+    </div>
+
+    <!-- Vitrine de jogos clicáveis para compra -->
+    <div class="conteiner">
+        <div class="cards btn-comprar" data-nome="NBA 2K24 - Kobe Bryant Edition" data-preco="249.90">
+            <img src="imagens/jogo1.webp" alt="NBA 2K24" class="fotos">
+            <div class="overlay-card">
+                <span>NBA 2K24</span>
+                <strong>R$ 249,90 • Comprar</strong>
+            </div>
+        </div>
+
+        <div class="cards btn-comprar" data-nome="Marvel's Spider-Man" data-preco="199.90">
+            <img src="imagens/jogo2.webp" alt="Spider-Man" class="fotos">
+            <div class="overlay-card">
+                <span>Marvel's Spider-Man</span>
+                <strong>R$ 199,90 • Comprar</strong>
+            </div>
+        </div>
+
+        <div class="cards btn-comprar" data-nome="Grand Theft Auto VI (Pré-venda)" data-preco="349.90">
+            <img src="imagens/jogo3.webp" alt="GTA VI" class="fotos">
+            <div class="overlay-card">
+                <span>GTA VI (Pré-venda)</span>
+                <strong>R$ 349,90 • Comprar</strong>
+            </div>
+        </div>
+
+        <div class="cards btn-comprar" data-nome="The Blood of Dawnwalker" data-preco="279.90">
+            <img src="imagens/jogo4.jpg" alt="Dawnwalker" class="fotos">
+            <div class="overlay-card">
+                <span>Dawnwalker</span>
+                <strong>R$ 279,90 • Comprar</strong>
+            </div>
+        </div>
+
+        <div class="cards btn-comprar" data-nome="Jogo Destaque 5" data-preco="189.90">
+            <img src="imagens/jogo5.jpg" alt="Produto gamer" class="fotos">
+            <div class="overlay-card">
+                <span>Edição Especial</span>
+                <strong>R$ 189,90 • Comprar</strong>
+            </div>
+        </div>
+
+        <div class="cards btn-comprar" data-nome="Jogo Destaque 6" data-preco="219.90">
+            <img src="imagens/jogo6.webp" alt="Produto gamer" class="fotos">
+            <div class="overlay-card">
+                <span>Lançamento</span>
+                <strong>R$ 219,90 • Comprar</strong>
+            </div>
+        </div>
+    </div>
+
+    <!-- Banner de oferta especial -->
+    <div class="serv">
+        <img src="imagens/segundacapa.jpeg" alt="Oferta MAD GAMES">
+        <div class="textosobreposto btn-comprar" data-nome="Combo Especial MAD GAMES" data-preco="500.00">
+            <h1>Por apenas R$ 500,00</h1>
+            <p class="dica-clique">Clique para garantir agora</p>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer>
+        <div class="coluna-links">
+            <a href="#" class="link-rodape">As condições de venda</a>
+            <a href="#" class="link-rodape">Política de privacidade</a>
+            <a href="#" class="link-rodape">Programa de Afiliação</a>
+            <a href="#" class="link-rodape">Contacta-nos</a>
+            <a href="#" class="link-rodape">Nosso Servidor Discord e Bot</a>
+            <a href="#" class="link-rodape">Use o seu gift card</a>
+            <a href="#" class="link-rodape">Notícias sobre videojogos, para PC e consolas.</a>
+        </div>
+
+        <div class="divisoria"></div>
+
+        <div class="coluna-logos">
+            <h3>Nos siga nas redes sociais</h3>
+            <div class="rede-logos">
+                <div class="logos1" data-rede="Discord"><img src="imagens/logodiscord.webp" alt="Discord"></div>
+                <div class="logos1" data-rede="Instagram"><img src="imagens/instagramlogo.avif" alt="Instagram"></div>
+                <div class="logos1" data-rede="YouTube"><img src="imagens/youtube.avif" alt="YouTube"></div>
+                <div class="logos1" data-rede="Facebook"><img src="imagens/logofacebook.png" alt="Facebook"></div>
+                <div class="logos1" data-rede="X"><img src="imagens/logoX.avif" alt="X"></div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal de Pagamento (mantido da sua base) -->
+    <div id="modal-pagamento" class="modal-overlay oculto">
+        <div class="modal-box">
+            <button id="fechar-modal" class="btn-fechar">&times;</button>
+            <h2>Finalizar Compra</h2>
+            <p id="produto-resumo" class="produto-resumo"></p>
+
+            <form id="form-pagamento">
+                <label for="metodo">Forma de Pagamento:</label>
+                <select id="metodo" required>
+                    <option value="pix">PIX (Aprovação imediata)</option>
+                    <option value="cartao">Cartão de Crédito</option>
+                    <option value="boleto">Boleto Bancário</option>
+                </select>
+
+                <div id="box-pix" class="box-metodo">
+                    <p>Chave PIX: <strong>pagamentos@madgames.com.br</strong></p>
+                    <button type="button" id="btn-copiar-pix" class="btn-secundario">Copiar código PIX</button>
+                </div>
+
+                <div id="box-cartao" class="box-metodo oculto">
+                    <label for="num-cartao">Número do Cartão:</label>
+                    <input type="text" id="num-cartao" placeholder="0000 0000 0000 0000" maxlength="19">
+                    <label for="nome-cartao">Nome impresso no cartão:</label>
+                    <input type="text" id="nome-cartao" placeholder="Nome completo">
+                </div>
+
+                <button type="submit" class="btn-pagar">Confirmar Pagamento</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notificação flutuante -->
+    <div id="toast" class="toast oculto"></div>
+
+    <!-- CORREÇÃO: script global (controla carrinho, redirecionamento ao perfil, redes sociais e cookies LGPD) -->
+    <script src="../global.js"></script>
+
+    <!-- ================= FUNCIONALIDADE DA HOME E PAGAMENTO ================= -->
+    <script>
+        const toast = document.getElementById("toast");
+        let timerToast;
+
+        function mostrarToast(texto) {
+            toast.textContent = texto;
+            toast.classList.remove("oculto");
+            clearTimeout(timerToast);
+            timerToast = setTimeout(() => toast.classList.add("oculto"), 3200);
+        }
+
+        // Controle do Modal de Pagamento (mantido da sua base)
+        const modal = document.getElementById("modal-pagamento");
+        const btnFechar = document.getElementById("fechar-modal");
+        const resumo = document.getElementById("produto-resumo");
+        const selectMetodo = document.getElementById("metodo");
+        const boxPix = document.getElementById("box-pix");
+        const boxCartao = document.getElementById("box-cartao");
+        const formPagamento = document.getElementById("form-pagamento");
+        const btnCopiarPix = document.getElementById("btn-copiar-pix");
+        let itemAtual = null;
+
+        // CORREÇÃO: ao clicar nos produtos em destaque, adiciona ao carrinho e direciona para o checkout.html
+        document.querySelectorAll(".btn-comprar").forEach((el, index) => {
+            el.addEventListener("click", () => {
+                const imgEl = el.querySelector("img") || el.parentElement.querySelector("img");
+
+                MadGames.adicionarAoCarrinho({
+                    id: el.dataset.id || "destaque-" + index,
+                    nome: el.dataset.nome,
+                    preco: Number(el.dataset.preco),
+                    imagem: imgEl ? imgEl.getAttribute("src") : "imagens/logo1.png"
+                });
+
+                window.location.href = "checkout.html";
+            });
+        });
+
+        btnFechar.addEventListener("click", () => modal.classList.add("oculto"));
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) modal.classList.add("oculto");
+        });
+
+        selectMetodo.addEventListener("change", () => {
+            boxPix.classList.toggle("oculto", selectMetodo.value !== "pix");
+            boxCartao.classList.toggle("oculto", selectMetodo.value !== "cartao");
+        });
+
+        btnCopiarPix.addEventListener("click", () => {
+            navigator.clipboard?.writeText("pagamentos@madgames.com.br");
+            mostrarToast("Chave PIX copiada!");
+        });
+
+        formPagamento.addEventListener("submit", (e) => {
+            e.preventDefault();
+            if (selectMetodo.value === "cartao") {
+                const num = document.getElementById("num-cartao").value.trim();
+                if (num.length < 12) {
+                    mostrarToast("Digite um número de cartão válido.");
+                    return;
+                }
+            }
+            const metodo = selectMetodo.options[selectMetodo.selectedIndex].text;
+            modal.classList.add("oculto");
+            mostrarToast(`Compra aprovada via ${metodo}: ${itemAtual.nome}!`);
+        });
+
+        // Links do rodapé (deixa "Política de privacidade" para o modal LGPD do global.js)
+        document.querySelectorAll(".link-rodape").forEach((link) => {
+            if (!link.textContent.toLowerCase().includes("privacidade")) {
+                link.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    mostrarToast(`Seção "${link.textContent}" aberta.`);
+                });
+            }
+        });
+
+        document.querySelectorAll(".logos1").forEach((rede) => {
+            rede.addEventListener("click", () => {
+                mostrarToast(`Abrindo perfil oficial da MAD GAMES no ${rede.dataset.rede}...`);
+            });
+        });
+    </script>
+</body>
+
+</html>
